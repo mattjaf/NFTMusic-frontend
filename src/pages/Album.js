@@ -82,7 +82,7 @@ const Album = ({ setNftAlbum }) => {
           </div>
         </div>
         <div className="topBan">
-          <div className="playButton" onClick={() => setNftAlbum(album)}>
+          <div className="playButton" onClick={() => setNftAlbum({ album: album, songIndex: 0 })}>
             PLAY
           </div>
           <div
@@ -109,7 +109,7 @@ const Album = ({ setNftAlbum }) => {
             nft = JSON.parse(nft.metadata);
             return (
               <>
-                <div className="tableContent">
+                <div key={i} className="tableContent" onClick={() => setNftAlbum({ album: album, songIndex: i })}>
                   <div className="numberHeader">{i + 1}</div>
                   <div
                     className="titleHeader"

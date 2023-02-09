@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useIPFS } from "./useIPFS";
 
-const useAudio = (url) => {
-  const {resolveLink} = useIPFS();
+const useAudio = (url, songIndex) => {
+  const { resolveLink } = useIPFS();
   const [audio, setAudio] = useState(url);
   const [trackIndex, setTrackIndex] = useState(0);
   const [newSong, setNewSong] = useState(0);
@@ -10,7 +10,7 @@ const useAudio = (url) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const audioRef = useRef(new Audio(resolveLink(JSON.parse(audio[trackIndex].metadata).animation_url)));
-  
+
   const intervalRef = useRef();
   const isReady = useRef(false);
 
@@ -35,12 +35,14 @@ const useAudio = (url) => {
   useEffect(() => {
     toggle();
     setAudio(url);
-    if(trackIndex === 0){
-      setNewSong(newSong+1)
-    }else{
-      setTrackIndex(0);
+    console.log(songIndex)
+    setTrackIndex(songIndex)
+    if (trackIndex === 0) {
+      setNewSong(newSong + 1)
+    } else {
+      setTrackIndex(songIndex);
     }
-  }, [url]); 
+  }, [url, songIndex]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -95,17 +97,17 @@ const useAudio = (url) => {
 
   const onSearchEnd = () => {
     if (!isPlaying) {
-        setIsPlaying(true);
-      }
-      startTimer();
-  } 
+      setIsPlaying(true);
+    }
+    startTimer();
+  }
 
   const onVolume = (vol) => {
-      setVolume(vol);
-      audioRef.current.volume = vol;
+    setVolume(vol);
+    audioRef.current.volume = vol;
   };
 
-  return [isPlaying, duration,toggle, toNextTrack, toPrevTrack, trackProgress, onSearch, onSearchEnd, onVolume, trackIndex];
+  return [isPlaying, duration, toggle, toNextTrack, toPrevTrack, trackProgress, onSearch, onSearchEnd, onVolume, trackIndex];
 };
 
 export default useAudio;

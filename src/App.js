@@ -15,6 +15,7 @@ const { Content, Sider, Footer } = Layout;
 const App = () => {
 
   const [nftAlbum, setNftAlbum] = useState();
+
   return (
     <>
       <Layout>
@@ -26,9 +27,10 @@ const App = () => {
               <SearchOutlined style={{ fontSize: "30px" }} />
             </div>
             <Link to="/">
-            <p style={{ color: "#1DB954" }}> Home </p>
+              <p style={{ color: "#1DB954" }}> Home </p>
             </Link>
             <p> Your Music </p>
+            <p> Publish </p>
             <div className="recentPlayed">
               <p className="recentTitle">RECENTLY PLAYED</p>
               <div className="install">
@@ -38,17 +40,18 @@ const App = () => {
             </div>
           </Sider>
           <Content className="contentWindow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/album" element={<Album setNftAlbum={setNftAlbum}/>} />
-          </Routes>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/album" element={<Album setNftAlbum={setNftAlbum} />} />
+            </Routes>
           </Content>
         </Layout>
         <Footer className="footer">
           {nftAlbum &&
-          <Player
-            url={nftAlbum}
-          />
+            <Player
+              url={nftAlbum.album}
+              songIndex={nftAlbum.songIndex}
+            />
           }
         </Footer>
       </Layout>
