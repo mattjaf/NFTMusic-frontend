@@ -5,11 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
 import { MoralisProvider } from "react-moralis";
-
+const APPID = process.env.REACT_APP_ID
+const SERVER_URL = process.env.REACT_APP_SERVER_URL
 
 ReactDOM.render(
   <React.StrictMode>
-    <MoralisProvider appId="xxxx" serverUrl="xxxx">
+    <MoralisProvider
+      initializeOnMount
+      appId={APPID}
+      serverUrl={SERVER_URL}
+    >
       <BrowserRouter>
         <App />
       </BrowserRouter>
