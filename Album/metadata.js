@@ -5,6 +5,9 @@ let songs = [];
 let durations = [];
 let ipfsArray = [];
 
+const MORALIS_API_KEY = process.env.REACT_MORALIS_API_KEY
+
+
 for (let i = 0; i < songs.length; i++) {
   ipfsArray.push({
     path: `metadata/${i}.json`,
@@ -20,13 +23,13 @@ for (let i = 0; i < songs.length; i++) {
 }
 
 axios.post("https://deep-index.moralis.io/api/v2/ipfs/uploadFolder", ipfsArray, {
-    headers: {
-      "X-API-KEY":
-        "<API Key Here>",
-      "Content-Type": "application/json",
-      accept: "application/json",
-    },
-  })
+  headers: {
+    "X-API-KEY":
+      MORALIS_API_KEY,
+    "Content-Type": "application/json",
+    accept: "application/json",
+  },
+})
   .then((res) => {
     console.log(res.data);
   })

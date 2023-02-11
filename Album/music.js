@@ -1,9 +1,12 @@
 let fs = require("fs");
 let axios = require("axios");
 
-let media = [];
+let media = fs.readdirSync('./export');
+//let media = ["JTiger.mp3"];
 let ipfsArray = [];
 let promises = [];
+
+const MORALIS_API_KEY = process.env.REACT_MORALIS_API_KEY
 
 for (let i = 0; i < media.length; i++) {
   promises.push(
@@ -24,7 +27,7 @@ Promise.all(promises).then(() => {
     .post("https://deep-index.moralis.io/api/v2/ipfs/uploadFolder", ipfsArray, {
       headers: {
         "X-API-KEY":
-          "<Your API Key>",
+          MORALIS_API_KEY,
         "Content-Type": "application/json",
         accept: "application/json",
       },
