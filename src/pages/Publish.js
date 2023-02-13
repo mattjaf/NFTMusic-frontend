@@ -3,7 +3,7 @@ import "./Publish.css";
 import { Tabs } from "antd";
 import { useMoralisFile, useMoralis, useWeb3ExecuteFunction } from "react-moralis"
 import { InboxOutlined, PlusOutlined, LoadingOutlined } from '@ant-design/icons';
-import { message, Upload, Button, Space } from 'antd';
+import { message, Upload, Button, Space, Input, Row, Col } from 'antd';
 import NetworkMapping from "../config/NetworkMapping.json"
 import NFTMusicFactoryABI from "../config/NFTMusicFactory.json"
 
@@ -26,6 +26,11 @@ const Publish = () => {
     const NFTMusicFactoryAddress = NetworkMapping[chainString] ? NetworkMapping[chainString].NFTMusicFactory[0] : NetworkMapping["80001"].NFTMusicFactory[0]
     const [fileToSongMapping, setFileToSongMapping] = useState({})
     const [metaDataArray, setMetaDataArray] = useState([])
+    const [albumName, setAlbumName] = useState()
+    const [genre, setGenre] = useState()
+    const [year, setYear] = useState()
+    const [symbol, setSymbol] = useState()
+    const [artist, setArtist] = useState()
     const contractProcessor = useWeb3ExecuteFunction();
 
 
@@ -71,7 +76,7 @@ const Publish = () => {
         },
         onChange(info) {
             const { status } = info.file;
-            console.log(info) // this might need some work
+            console.log(info)
             if (status !== 'uploading') {
                 console.log(info.file, info.fileList);
             }
@@ -79,7 +84,7 @@ const Publish = () => {
                 delete fileToSongMapping[info.file.name]
                 console.log(fileToSongMapping)
             }
-            if (status === 'done') {
+            if (status === 'done') { // this might need some work
                 message.success(`${info.file.name} file uploaded successfully.`);
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
@@ -103,16 +108,19 @@ const Publish = () => {
 
     const uploadNftMetada = async () => {
         console.log(fileToSongMapping)
-        for (const key in fileToSongMapping) {
-            console.log(fileToSongMapping[key])
+        for (const fileName in fileToSongMapping) {
+            console.log(fileToSongMapping[fileName])
             console.log("hello")
             const metadataNft = {
                 image: imageUrl,
-                name: "songName", //?
-                animation_url: fileToSongMapping[key],
-                duration: await getAudioDuration(fileToSongMapping[key]),
-                artist: "",
-                year: ""
+                name: fileName.split(".")[0].replace(/([A-Z])/g, ' $1'), // might implement an Input
+                description: genre, //store in attributes or genre?
+                animation_url: fileToSongMapping[fileName],
+                duration: await getAudioDuration(fileToSongMapping[fileName]),
+                album: albumName,
+                symbol: symbol,
+                artist: artist,
+                year: year
             };
             const resultNft = await saveFile(
                 "metadata.json",
@@ -132,7 +140,7 @@ const Publish = () => {
             functionName: "deployNFTMusicSimple",
             abi: NFTMusicFactoryABI,
             params: {
-                _name: "test",
+                _name: albumName,
                 _symbol: "symbol",
                 _songs: metaDataArray,
                 _albumCover: imageUrl
@@ -140,14 +148,22 @@ const Publish = () => {
         }
         await contractProcessor.fetch({
             params: options,
-            onSuccess: () => {
-                alert("Succesful Mint");
-                setFileToSongMapping({})
-                setMetaDataArray([])
-                setImageUrl(undefined)
+            onSuccess: (tx) => {
+                tx.wait()
+                    .then(() => {
+                        message.success(`${"Great"} success!!!`)
+                        setFileToSongMapping({})
+                        setMetaDataArray([])
+                        setImageUrl(undefined)
+                        setAlbumName(undefined)
+                        setSymbol(undefined)
+                        setGenre(undefined)
+                        setYear(undefined)
+                        setArtist(undefined)
+                    })
             },
             onError: (error) => {
-                alert(error.message);
+                message.error(error.message)
             },
         });
     }
@@ -155,7 +171,7 @@ const Publish = () => {
     const handlePublish = async () => {
         await uploadNftMetada()
         await deployAndMint()
-        console.log("hello")
+        console.log("handling publish...")
     }
 
     useEffect(() => {
@@ -170,41 +186,71 @@ const Publish = () => {
                     <h1 className="featuredTitle">Publish New Album</h1>
                     {isAuthenticated ?
                         <div className="upload">
-                            <Upload
-                                name="avatar"
-                                listType="picture-card"
-                                className="avatar-uploader"
-                                showUploadList={false}
-                                customRequest={(event) => {
-                                    const file = event.file;
-                                    if (!file) return;
-                                    const metadata = { createdById: user.id };
-                                    saveFile(file?.name, file, {
-                                        onSuccess(result) {
-                                            console.log(result)
-                                            setImageUrl(result._ipfs)
-                                            setLoading(false);
-                                        },
-                                        type: event.file.type,
-                                        metadata,
-                                        saveIPFS: true,
-                                    })
-                                }}
-                                beforeUpload={beforeUploadingImage}
-                                onChange={handleChange}
-                            >
-                                {imageUrl ? (
-                                    <img
-                                        src={imageUrl}
-                                        alt="avatar"
-                                        style={{
-                                            width: '100%',
-                                        }}
-                                    />
-                                ) : (
-                                    uploadButton
-                                )}
-                            </Upload>
+                            <div classname="upperInputs">
+                                <Row gutter={8}>
+                                    <Col span={4}>
+                                        <Upload
+                                            name="avatar"
+                                            listType="picture-card"
+                                            className="avatar-uploader"
+                                            showUploadList={false}
+                                            customRequest={(event) => {
+                                                const file = event.file;
+                                                if (!file) return;
+                                                const metadata = { createdById: user.id };
+                                                saveFile(file?.name, file, {
+                                                    onSuccess(result) {
+                                                        console.log(result)
+                                                        setImageUrl(result._ipfs)
+                                                        setLoading(false);
+                                                    },
+                                                    type: event.file.type,
+                                                    metadata,
+                                                    saveIPFS: true,
+                                                })
+                                            }}
+                                            beforeUpload={beforeUploadingImage}
+                                            onChange={handleChange}
+                                        >
+                                            {imageUrl ? (
+                                                <img
+                                                    src={imageUrl}
+                                                    alt="avatar"
+                                                    style={{
+                                                        width: '100%',
+                                                    }}
+                                                />
+                                            ) : (
+                                                uploadButton
+                                            )}
+                                        </Upload>
+                                    </Col>
+                                    <Col span={20}>
+                                        <Input.Group size="large">
+                                            <Row gutter={8}>
+                                                <Col span={16}>
+                                                    <Input placeholder="Album Name" size="large" onChange={event => setAlbumName(event.target.value)} />
+                                                </Col>
+                                                <Col span={4}>
+                                                    <Input placeholder="Symbol" size="large" onChange={event => setSymbol(event.target.value)} />
+                                                </Col>
+                                                <Col span={4}>
+                                                    <Input placeholder="Year" size="large" onChange={event => setYear(event.target.value)} />
+                                                </Col>
+                                            </Row>
+                                            <p style={{ marginBottom: "6px" }} />
+                                            <Row gutter={8}>
+                                                <Col span={16}>
+                                                    <Input placeholder="Artists" size="large" onChange={event => setArtist(event.target.value)} />
+                                                </Col>
+                                                <Col span={8}>
+                                                    <Input placeholder="Genre" size="large" onChange={event => setGenre(event.target.value)} />
+                                                </Col>
+                                            </Row>
+                                        </Input.Group>
+                                    </Col>
+                                </Row>
+                            </div>
                             <div style={{ backgroundColor: 'white' }}>
                                 <Dragger {...uploadMusicProps}>
                                     <p className="ant-upload-drag-icon">
