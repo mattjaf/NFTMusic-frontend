@@ -19,7 +19,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "moralis:cloud": "moralis-admin-cli watch-cloud-folder  --moralisSubdomain dmxose5rxtan.usemoralis.com --autoSave 1 --moralisCloudfolder ./cloudFunctions",
+    "moralis:logs": "moralis-admin-cli get-logs --moralisSubdomain dmxose5rxtan.usemoralis.com",
+    "moralis:events": "node addEvents.js"
   },
   "eslintConfig": {
     "extends": [
@@ -42,6 +45,7 @@
   "devDependencies": {
     "@web3uikit/web3": "^0.2.2",
     "fs": "^0.0.1-security",
+    "moralis-admin-cli": "^2.1.16",
     "moralis-v1": "^1.12.0",
     "path": "^0.12.7"
   }
