@@ -89,7 +89,9 @@ const Publish = () => {
         audio.src = url;
         return new Promise((resolve) => {
             audio.onloadedmetadata = function () {
-                resolve(audio.duration);
+                const minutes = Math.floor(audio.duration / 60);
+                const seconds = Math.floor(audio.duration % 60);
+                resolve(`${minutes}:${String(seconds).padStart(2, '0')}`);
             };
         });
     };
@@ -126,7 +128,8 @@ const Publish = () => {
             params: {
                 _name: "test",
                 _symbol: "symbol",
-                _songs: metaDataArray
+                _songs: metaDataArray,
+                _albumCover: imageUrl
             },
         }
         await contractProcessor.fetch({
