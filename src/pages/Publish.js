@@ -24,7 +24,7 @@ const Publish = () => {
     const { Moralis, chainId, user, isAuthenticated } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "80001"
     const NFTMusicFactoryAddress = NetworkMapping[chainString] ? NetworkMapping[chainString].NFTMusicFactory[0] : NetworkMapping["80001"].NFTMusicFactory[0]
-    const [songArray, setSongArray] = useState([])
+    const [fileToSongMapping, setFileToSongMapping] = useState({})
     const [metaDataArray, setMetaDataArray] = useState([])
     const contractProcessor = useWeb3ExecuteFunction();
 
@@ -61,7 +61,8 @@ const Publish = () => {
             saveFile(file?.name, file, {
                 onSuccess(result) {
                     console.log(result)
-                    songArray.push(result._ipfs)
+                    fileToSongMapping[file.name] = result._ipfs
+                    console.log(fileToSongMapping)
                 },
                 type: event.file.type,
                 metadata,
@@ -70,9 +71,13 @@ const Publish = () => {
         },
         onChange(info) {
             const { status } = info.file;
-            console.log(status) // this might need some work
+            console.log(info) // this might need some work
             if (status !== 'uploading') {
                 console.log(info.file, info.fileList);
+            }
+            if (status === "removed") {
+                delete fileToSongMapping[info.file.name]
+                console.log(fileToSongMapping)
             }
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
@@ -97,14 +102,15 @@ const Publish = () => {
     };
 
     const uploadNftMetada = async () => {
-        console.log(songArray)
-        for (let songindex = 0; songArray.length > songindex; songindex++) {
+        console.log(fileToSongMapping)
+        for (const key in fileToSongMapping) {
+            console.log(fileToSongMapping[key])
             console.log("hello")
             const metadataNft = {
                 image: imageUrl,
                 name: "songName", //?
-                animation_url: songArray[songindex],
-                duration: await getAudioDuration(songArray[songindex]),
+                animation_url: fileToSongMapping[key],
+                duration: await getAudioDuration(fileToSongMapping[key]),
                 artist: "",
                 year: ""
             };
@@ -136,7 +142,7 @@ const Publish = () => {
             params: options,
             onSuccess: () => {
                 alert("Succesful Mint");
-                setSongArray([])
+                setFileToSongMapping({})
                 setMetaDataArray([])
                 setImageUrl(undefined)
             },
@@ -153,9 +159,9 @@ const Publish = () => {
     }
 
     useEffect(() => {
-        console.log(songArray)
+        console.log(fileToSongMapping)
         console.log(metaDataArray)
-    }, [songArray, metaDataArray]);
+    }, [fileToSongMapping, metaDataArray]);
 
     return (
         <>
@@ -199,16 +205,18 @@ const Publish = () => {
                                     uploadButton
                                 )}
                             </Upload>
-                            <Dragger {...uploadMusicProps}>
-                                <p className="ant-upload-drag-icon">
-                                    <InboxOutlined />
-                                </p>
-                                <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                                <p className="ant-upload-hint">
-                                    Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-                                    band files
-                                </p>
-                            </Dragger>
+                            <div style={{ backgroundColor: 'white' }}>
+                                <Dragger {...uploadMusicProps}>
+                                    <p className="ant-upload-drag-icon">
+                                        <InboxOutlined />
+                                    </p>
+                                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                                    <p className="ant-upload-hint">
+                                        Support for a single or bulk upload. Strictly prohibit from uploading company data or other
+                                        band files
+                                    </p>
+                                </Dragger>
+                            </div>
                             <br />
                             <Space direction="vertical" style={{ width: '100%' }}>
                                 <Button type="primary" block onClick={() => { handlePublish() }}>
