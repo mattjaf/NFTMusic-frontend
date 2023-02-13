@@ -5,7 +5,8 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract NFTMusicSimple is ERC721, Ownable {
-    uint256 tokenCounter;
+    string albumCover;
+    uint256 tokenCounter; // might not need this
     address admin;
     mapping(uint256 => string) tokenIdToSong;
 
@@ -18,13 +19,13 @@ contract NFTMusicSimple is ERC721, Ownable {
         string memory _name,
         string memory _symbol,
         string[] memory _songs,
-        address _admin
+        address _admin,
+        string memory _albumCover
     ) ERC721(_name, _symbol) {
         admin = _admin;
+        albumCover = _albumCover;
         if (_songs.length > 0) {
-            for (uint256 i = 0; _songs.length > i; i++) {
-                publishSong(_songs[i]);
-            }
+            publishSongArray(_songs);
         }
         _transferOwnership(tx.origin);
     }
@@ -36,10 +37,8 @@ contract NFTMusicSimple is ERC721, Ownable {
     }
 
     function publishSongArray(string[] memory _songs) public onlyOwner {
-        if (_songs.length > 0) {
-            for (uint256 i = 0; _songs.length > i; i++) {
-                publishSong(_songs[i]);
-            }
+        for (uint256 i = 0; _songs.length > i; i++) {
+            publishSong(_songs[i]);
         }
     }
 
@@ -61,9 +60,21 @@ contract NFTMusicSimple is ERC721, Ownable {
         return tokenIdToSong[_tokenId];
     }
 
+    function albumMetaData()
+        public
+        view
+        returns (
+            string memory,
+            string memory,
+            address
+        )
+    {
+        return (name(), albumCover, address(this));
+    }
+
     function burnSong(uint256 _tokenId) public {
         require(
-            msg.sender == admin || msg.sender == owner(),
+            msg.sender == admin || ownerOf(_tokenId) == owner(),
             "You are not authorized"
         );
         _burn(_tokenId);
