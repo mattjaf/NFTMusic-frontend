@@ -20,6 +20,11 @@
                 "internalType": "address",
                 "name": "_admin",
                 "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "_albumCover",
+                "type": "string"
             }
         ],
         "stateMutability": "nonpayable",
@@ -118,6 +123,29 @@
         ],
         "name": "Transfer",
         "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "albumMetaData",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
         "inputs": [
