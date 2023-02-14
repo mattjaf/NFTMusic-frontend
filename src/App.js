@@ -4,6 +4,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Album from './pages/Album';
 import Publish from "./pages/Publish"
+import Search from "./pages/Search"
 import './App.css';
 import { Link } from "react-router-dom";
 import Player from "./components/AudioPlayer";
@@ -23,10 +24,12 @@ const App = () => {
         <Layout>
           <Sider width={300} className="sideBar">
             <img src={Spotify} alt="Logo" className="logo"></img>
-            <div className="searchBar">
-              <span> Search </span>
-              <SearchOutlined style={{ fontSize: "30px" }} />
-            </div>
+            <Link to="/Search">
+              <div className="searchBar" style={location.pathname == "/Search" ? { color: "#1DB954" } : { color: "#FFFFFF" }}>
+                <span> Search </span>
+                <SearchOutlined style={{ fontSize: "30px" }} />
+              </div>
+            </Link>
             <Link to="/">
               <p style={location.pathname == "/" ? { color: "#1DB954" } : { color: "#FFFFFF" }}> Home </p>
             </Link>
@@ -50,6 +53,7 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/album" element={<Album setNftAlbum={setNftAlbum} />} />
               <Route path="/Publish" element={<Publish />} />
+              <Route path="/Search" element={<Search />} />
             </Routes>
           </Content>
         </Layout>
