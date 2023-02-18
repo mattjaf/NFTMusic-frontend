@@ -20,8 +20,10 @@ const beforeUploadingImage = (file) => {
 };
 
 const Publish = () => {
+    const [, updateState] = React.useState();
+    const forceUpdate = React.useCallback(() => updateState({}), []);
     const { saveFile } = useMoralisFile();
-    const { Moralis, chainId, user, isAuthenticated } = useMoralis()
+    const { Moralis, chainId, user, isAuthenticated, account } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "80001"
     const NFTMusicFactoryAddress = NetworkMapping[chainString] ? NetworkMapping[chainString].NFTMusicFactory[0] : NetworkMapping["80001"].NFTMusicFactory[0]
     const [fileToSongMapping, setFileToSongMapping] = useState({})
@@ -59,6 +61,8 @@ const Publish = () => {
     const uploadMusicProps = {
         name: 'file',
         multiple: true,
+        name: "testing",
+        fileList: fileToSongMapping == {} ? [] : Object.values(fileToSongMapping).map(fileObj => fileObj.file),
         customRequest(event) {
             const file = event.file;
             if (!file) return;
@@ -66,13 +70,17 @@ const Publish = () => {
             saveFile(file?.name, file, {
                 onSuccess(result) {
                     console.log(result)
-                    fileToSongMapping[file.name] = result._ipfs
+                    fileToSongMapping[file.name] = { file, ipfs: result._ipfs }; // Add ipfs to file object
                     console.log(fileToSongMapping)
+                    forceUpdate();
                 },
                 type: event.file.type,
                 metadata,
                 saveIPFS: true,
             })
+        },
+        onRemove(info) {
+            delete fileToSongMapping[info.name]
         },
         onChange(info) {
             const { status } = info.file;
@@ -81,8 +89,7 @@ const Publish = () => {
                 console.log(info.file, info.fileList);
             }
             if (status === "removed") {
-                delete fileToSongMapping[info.file.name]
-                console.log(fileToSongMapping)
+                forceUpdate()
             }
             if (status === 'done') { // this might need some work
                 message.success(`${info.file.name} file uploaded successfully.`);
@@ -110,17 +117,18 @@ const Publish = () => {
         console.log(fileToSongMapping)
         for (const fileName in fileToSongMapping) {
             console.log(fileToSongMapping[fileName])
-            console.log("hello")
+            console.log("uploading NFT metadata....")
             const metadataNft = {
                 image: imageUrl,
                 name: fileName.split(".")[0].replace(/([A-Z])/g, ' $1'), // might implement an Input
                 description: genre, //store in attributes or genre?
-                animation_url: fileToSongMapping[fileName],
-                duration: await getAudioDuration(fileToSongMapping[fileName]),
+                animation_url: fileToSongMapping[fileName].ipfs,
+                duration: await getAudioDuration(fileToSongMapping[fileName].ipfs),
                 album: albumName,
                 symbol: symbol,
                 artist: artist,
-                year: year
+                year: year,
+                publisher: account
             };
             const resultNft = await saveFile(
                 "metadata.json",
@@ -141,7 +149,7 @@ const Publish = () => {
             abi: NFTMusicFactoryABI,
             params: {
                 _name: albumName,
-                _symbol: "symbol",
+                _symbol: symbol,
                 _songs: metaDataArray,
                 _albumCover: imageUrl
             },
@@ -160,6 +168,7 @@ const Publish = () => {
                         setGenre(undefined)
                         setYear(undefined)
                         setArtist(undefined)
+                        forceUpdate()
                     })
             },
             onError: (error) => {
@@ -229,22 +238,22 @@ const Publish = () => {
                                         <Input.Group size="large">
                                             <Row gutter={8}>
                                                 <Col span={16}>
-                                                    <Input placeholder="Album Name" size="large" onChange={event => setAlbumName(event.target.value)} />
+                                                    <Input placeholder={"Album Name"} value={albumName} size="large" onChange={event => setAlbumName(event.target.value)} />
                                                 </Col>
                                                 <Col span={4}>
-                                                    <Input placeholder="Symbol" size="large" onChange={event => setSymbol(event.target.value)} />
+                                                    <Input placeholder={"Symbol"} value={symbol} size="large" onChange={event => setSymbol(event.target.value)} />
                                                 </Col>
                                                 <Col span={4}>
-                                                    <Input placeholder="Year" size="large" onChange={event => setYear(event.target.value)} />
+                                                    <Input placeholder={"Year"} value={year} size="large" onChange={event => setYear(event.target.value)} />
                                                 </Col>
                                             </Row>
                                             <p style={{ marginBottom: "6px" }} />
                                             <Row gutter={8}>
                                                 <Col span={16}>
-                                                    <Input placeholder="Artists" size="large" onChange={event => setArtist(event.target.value)} />
+                                                    <Input placeholder={"Artist"} value={artist} size="large" onChange={event => setArtist(event.target.value)} />
                                                 </Col>
                                                 <Col span={8}>
-                                                    <Input placeholder="Genre" size="large" onChange={event => setGenre(event.target.value)} />
+                                                    <Input placeholder={"Genre"} value={genre} size="large" onChange={event => setGenre(event.target.value)} />
                                                 </Col>
                                             </Row>
                                         </Input.Group>
