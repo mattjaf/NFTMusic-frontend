@@ -1,0 +1,1 @@
+export const placeholderImage = "https://ipfs.moralis.io:2053/ipfs/Qme47mRtJzTAv8BYh1LxKR1CLJ428eLBn4SRaHmcAcxWkX"
