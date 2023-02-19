@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Album from './pages/Album';
 import Publish from "./pages/Publish"
 import Search from "./pages/Search"
+import YourMusic from "./pages/YourMusic"
 import './App.css';
 import { Link } from "react-router-dom";
 import Player from "./components/AudioPlayer";
@@ -33,7 +34,9 @@ const App = () => {
             <Link to="/">
               <p style={location.pathname == "/" ? { color: "#1DB954" } : { color: "#FFFFFF" }}> Home </p>
             </Link>
-            <p> Your Music </p>
+            <Link to="/YourMusic">
+              <p style={location.pathname == "/YourMusic" ? { color: "#1DB954" } : { color: "#FFFFFF" }}> Your Music </p>
+            </Link>
             <Link to="/Publish">
               <p style={location.pathname == "/Publish" ? { color: "#1DB954" } : { color: "#FFFFFF" }}> Publish </p>
             </Link>
@@ -54,6 +57,7 @@ const App = () => {
               <Route path="/album" element={<Album setNftAlbum={setNftAlbum} />} />
               <Route path="/Publish" element={<Publish />} />
               <Route path="/Search" element={<Search />} />
+              <Route path="/YourMusic" element={<YourMusic />} />
             </Routes>
           </Content>
         </Layout>
