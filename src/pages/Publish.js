@@ -195,7 +195,7 @@ const Publish = () => {
                     <h1 className="featuredTitle">Publish New Album</h1>
                     {isAuthenticated ?
                         <div className="upload">
-                            <div classname="upperInputs">
+                            <div className="upperInputs">
                                 <Row gutter={8}>
                                     <Col span={4}>
                                         <Upload
