@@ -47,12 +47,14 @@ export const useSearch = () => {
             const albums = response.result.map((album) => {
                 if (album.metadata) { // might need some checks
                     const metadata = JSON.parse(album.metadata)
-                    console.log(response)
-                    console.log(metadata)
-                    return {
-                        title: metadata.album,
-                        image: metadata.image,
-                        contract: album.token_address
+                    if (metadata.image) {
+                        console.log(response)
+                        console.log(metadata)
+                        return {
+                            title: metadata.album,
+                            image: metadata.image,
+                            contract: album.token_address
+                        }
                     }
                 }
             })
