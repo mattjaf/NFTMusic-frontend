@@ -37,22 +37,35 @@ export const useSearch = () => {
     };
 
     const searchForAlbums = async (searchInput) => {
+        const uniqueAddresses = [];
         await Web3Api.token.searchNFTs({
             q: searchInput,
             chain: "0x13881",
             filter: "global",
             addresses: addressArray
-        }).then((response) => setLibrary(response.result.map((album) => {
-            if (album.metadata) { // might need some checks
-                const metadata = JSON.parse(album.metadata)
-                console.log(metadata)
-                return {
-                    title: metadata.album,
-                    image: metadata.image,
-                    contract: album.token_address
+        }).then((response) => {
+            const albums = response.result.map((album) => {
+                if (album.metadata) { // might need some checks
+                    const metadata = JSON.parse(album.metadata)
+                    console.log(response)
+                    console.log(metadata)
+                    return {
+                        title: metadata.album,
+                        image: metadata.image,
+                        contract: album.token_address
+                    }
                 }
-            }
-        })))
+            })
+            // Filter out duplicates
+            const uniqueAlbums = albums.filter((album) => {
+                if (album && !uniqueAddresses.includes(album.contract)) {
+                    uniqueAddresses.push(album.contract);
+                    return true;
+                }
+                return false;
+            });
+            setLibrary(uniqueAlbums);
+        });
     };
 
     useEffect(() => {
@@ -73,7 +86,7 @@ export const useSearch = () => {
         }
     }, [library]);
 
-    return { searchNFTs, searchForAlbums, searchResult, library };
+    return { searchNFTs, searchForAlbums, searchResult, library, addressArray, setLibrary };
 
 }
 
