@@ -20,8 +20,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "moralis:cloud": "moralis-admin-cli watch-cloud-folder  --moralisSubdomain dmxose5rxtan.usemoralis.com --autoSave 1 --moralisCloudfolder ./cloudFunctions",
-    "moralis:logs": "moralis-admin-cli get-logs --moralisSubdomain dmxose5rxtan.usemoralis.com",
+    "moralis:cloud": "moralis-admin-cli watch-cloud-folder --moralisApiKey HbdHNV0DmDuwent --moralisApiSecret 9d9KZvuJi622nWo --moralisSubdomain 1wkmfxzxhfg3.grandmoralis.com --autoSave 1 --moralisCloudfolder ./CloudFunctions",
+    "moralis:logs": "moralis-admin-cli get-logs --moralisSubdomain 1wkmfxzxhfg3.usemoralis.com",
     "moralis:events": "node addEvents.js"
   },
   "eslintConfig": {
