@@ -12,7 +12,7 @@ Moralis.Cloud.afterSave("PublishedAblum", async (request) => { // spelled wrong 
         const txHash = request.object.get("transactionHash");
         const contractAddress = request.object.get("contractAddress");
         const contractIndex = request.object.get("contractIndex");
-        const name = request.object.get("name");
+        const name = request.object.get("name"); //changed to albulmName on redeployment
         const symbol = request.object.get("symbol");
         const albumCover = request.object.get("albumCover");
         const songURIs = request.object.get("songURIs");
@@ -21,9 +21,10 @@ Moralis.Cloud.afterSave("PublishedAblum", async (request) => { // spelled wrong 
         library.set("transactionHash", txHash);
         library.set("contractAddress", contractAddress);
         library.set("contractIndex", contractIndex);
-        library.set("albumName", name);
+        library.set("albumName", name); //this is emiting the wrong data for some reason?
         library.set("symbol", symbol);
         library.set("albumCover", albumCover);
+        library.set("songURIs", songURIs);
 
         logger.info("Saving event data...");
         await library.save();
@@ -39,13 +40,12 @@ Moralis.Cloud.afterSave("PublishedAblum", async (request) => { // spelled wrong 
                 songDataArray.push(metadata);
 
                 songObj.set("albumName", metadata.album);
-                songObj.set("songName", name);
+                songObj.set("songName", metadata.name);
                 songObj.set("uri", song);
                 songObj.set("animation_url", metadata.animation_url);
                 songObj.set("publisher", metadata.publisher);
                 songObj.set("artist", metadata.artist);
                 songObj.set("year", metadata.year);
-                songObj.set("title", metadata.name);
                 songObj.set("genre", metadata.description);
                 songObj.set("duration", metadata.duration);
                 songObj.set("symbol", metadata.symbol);
@@ -57,6 +57,7 @@ Moralis.Cloud.afterSave("PublishedAblum", async (request) => { // spelled wrong 
             }
 
             const firstSongMetadata = songDataArray[0];
+            library.set("albumName", firstSongMetadata.name); //delete this and check value on redeployment
             library.set("publisher", firstSongMetadata.publisher);
             library.set("artist", firstSongMetadata.artist);
             library.set("year", firstSongMetadata.year);
