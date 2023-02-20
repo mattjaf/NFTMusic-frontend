@@ -6,6 +6,7 @@ import { InboxOutlined, PlusOutlined, LoadingOutlined } from '@ant-design/icons'
 import { message, Upload, Button, Space, Input, Row, Col } from 'antd';
 import NetworkMapping from "../config/NetworkMapping.json"
 import NFTMusicFactoryABI from "../config/NFTMusicFactory.json"
+import GenreSelect from "../components/GenreSelect";
 import console from "console-browserify";
 
 
@@ -175,6 +176,8 @@ const Publish = () => {
             },
             onError: (error) => {
                 message.error(error.message)
+                //there might be a better way to handle this bug
+                setMetaDataArray([])
             },
         });
     }
@@ -255,7 +258,7 @@ const Publish = () => {
                                                     <Input placeholder={"Artist"} value={artist} size="large" onChange={event => setArtist(event.target.value)} />
                                                 </Col>
                                                 <Col span={8}>
-                                                    <Input placeholder={"Genre"} value={genre} size="large" onChange={event => setGenre(event.target.value)} />
+                                                    <GenreSelect placeholder={"Genre"} value={genre} size="large" onSelect={selectValue => setGenre(selectValue)} />
                                                 </Col>
                                             </Row>
                                         </Input.Group>
