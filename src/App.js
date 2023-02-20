@@ -10,7 +10,7 @@ import './App.css';
 import { Link } from "react-router-dom";
 import Player from "./components/AudioPlayer";
 import { Layout } from "antd";
-import Spotify from "./images/Spotify.png";
+import CircleFFM from "./images/CircleFFM.png";
 import { SearchOutlined, DownCircleOutlined } from "@ant-design/icons";
 import { ConnectButton } from "@web3uikit/web3";
 
@@ -24,7 +24,7 @@ const App = () => {
       <Layout>
         <Layout>
           <Sider width={300} className="sideBar">
-            <img src={Spotify} alt="Logo" className="logo"></img>
+            <img src={CircleFFM} alt="Logo" className="logo"></img>
             <Link to="/Search">
               <div className="searchBar" style={location.pathname == "/Search" ? { color: "#1DB954" } : { color: "#FFFFFF" }}>
                 <span> Search </span>
