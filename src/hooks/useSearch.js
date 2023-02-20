@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useMoralisWeb3Api, useMoralis } from "react-moralis"
 import NetworkMapping from "../config/NetworkMapping.json"
 import NFTMusicFactoryABI from "../config/NFTMusicFactory.json"
+import console from "console-browserify";
 
 export const useSearch = () => {
     const NFTMusicFactoryAddress = NetworkMapping["80001"].NFTMusicFactory[0]

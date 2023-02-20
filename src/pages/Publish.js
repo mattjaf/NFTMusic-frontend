@@ -6,6 +6,8 @@ import { InboxOutlined, PlusOutlined, LoadingOutlined } from '@ant-design/icons'
 import { message, Upload, Button, Space, Input, Row, Col } from 'antd';
 import NetworkMapping from "../config/NetworkMapping.json"
 import NFTMusicFactoryABI from "../config/NFTMusicFactory.json"
+import console from "console-browserify";
+
 
 
 const { Dragger } = Upload;

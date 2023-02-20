@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@web3uikit/web3": "^0.2.2",
+    "console-browserify": "^1.2.0",
     "fs": "^0.0.1-security",
     "moralis-admin-cli": "^2.1.16",
     "moralis-v1": "^1.12.0",

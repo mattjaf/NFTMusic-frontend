@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import { Tabs } from "antd";
-//import { library } from "../helpers/albumList";
 import { AlbumList } from "../helpers/albumsList";
+import console from "console-browserify";
 
 
 const { TabPane } = Tabs;
