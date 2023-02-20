@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useIPFS } from "./useIPFS";
+import console from "console-browserify";
+
 
 const useAudio = (url, songIndex) => {
   const { resolveLink } = useIPFS();
