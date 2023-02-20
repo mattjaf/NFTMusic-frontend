@@ -24,7 +24,9 @@ const App = () => {
       <Layout>
         <Layout>
           <Sider width={300} className="sideBar">
-            <img src={CircleFFM} alt="Logo" className="logo"></img>
+            <Link to="/">
+              <img src={CircleFFM} alt="Logo" className="logo" />
+            </Link>
             <Link to="/Search">
               <div className="searchBar" style={location.pathname == "/Search" ? { color: "#1DB954" } : { color: "#FFFFFF" }}>
                 <span> Search </span>
