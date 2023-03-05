@@ -1,9 +1,9 @@
 import React from "react";
-import { useAlbum } from "../hooks/useAlbum";
 import { useLocation } from "react-router";
 import "./Album.css";
 import Opensea from "../images/opensea.png";
 import { ClockCircleOutlined } from "@ant-design/icons";
+import {useAlbumFromDatabase} from "../hooks/useAlbumFromDatabase";
 
 const bears = [
   {
@@ -18,7 +18,7 @@ const bears = [
 
 const Album = ({ setNftAlbum }) => {
   const { state: albumDetails } = useLocation();
-  const { album } = useAlbum(albumDetails.contract);
+  const { album } = useAlbumFromDatabase(albumDetails.contract);
 
   return (
     <>
@@ -33,10 +33,10 @@ const Album = ({ setNftAlbum }) => {
             <div>ALBUM</div>
             <div className="title">{albumDetails.title}</div>
             <div className="artist">
-              {album && JSON.parse(album[0].metadata).artist}
+              {album && (album[0].metadata).artist}
             </div>
             <div>
-              {album && JSON.parse(album[0].metadata).year} •{" "}
+              {album && (album[0].metadata).year} •{" "}
               {album && album.length} Songs
             </div>
           </div>
@@ -66,7 +66,7 @@ const Album = ({ setNftAlbum }) => {
         </div>
         {album &&
           album.map((nft, i) => {
-            nft = JSON.parse(nft.metadata);
+            nft = (nft.metadata);
             return (
               <>
                 <div key={i} className="tableContent" onClick={() => setNftAlbum({ album: album, songIndex: i })}>

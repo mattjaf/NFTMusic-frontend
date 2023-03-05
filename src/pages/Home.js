@@ -2,20 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import { Tabs } from "antd";
-import { AlbumList } from "../helpers/albumsList";
 import console from "console-browserify";
-
+import { AlbumListFromDataBase } from "../helpers/albumListFromDataBase";
 
 const { TabPane } = Tabs;
 
 const Home = () => {
-  const { library } = AlbumList();
+  const { library } = AlbumListFromDataBase();
   console.log(library)
 
 
   return (
     <>
-      {library ?
+      {library ? (
         <Tabs defaultActiveKey="1" centered>
           <TabPane tab="FEATURED" key="1">
             <h1 className="featuredTitle">Today Is The Day</h1>
@@ -35,7 +34,7 @@ const Home = () => {
           <TabPane tab="GENRES & MOODS" key="2">
             <h1 className="featuredTitle">Pop Music</h1>
             <div className="albums">
-              {library.slice(7, 13).map((e) => (
+              {library.slice(7, 12).map((e) => (
                 <Link to="/album" state={e} className="albumSelection">
                   <img
                     src={e.image}
@@ -48,7 +47,7 @@ const Home = () => {
             </div>
             <h1 className="featuredTitle">Top Hits</h1>
             <div className="albums">
-              {library.slice(5, 11).map((e) => (
+              {library.slice(5, 10).map((e) => (
                 <Link to="/album" state={e} className="albumSelection">
                   <img
                     src={e.image}
@@ -61,7 +60,7 @@ const Home = () => {
             </div>
             <h1 className="featuredTitle">Country</h1>
             <div className="albums">
-              {library.slice(0, 6).map((e) => (
+              {library.slice(0, 5).map((e) => (
                 <Link to="/album" state={e} className="albumSelection">
                   <img
                     src={e.image}
@@ -74,7 +73,7 @@ const Home = () => {
             </div>
             <h1 className="featuredTitle">Classics</h1>
             <div className="albums">
-              {library.slice(5, 11).map((e) => (
+              {library.slice(5, 10).map((e) => (
                 <Link to="/album" state={e} className="albumSelection">
                   <img
                     src={e.image}
@@ -101,8 +100,10 @@ const Home = () => {
               ))}
             </div>
           </TabPane>
-        </Tabs> :
-        <div />}
+        </Tabs>
+      ) : (
+        <div />
+      )}
     </>
   );
 };

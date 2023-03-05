@@ -2,24 +2,26 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Search.css";
 import { Tabs } from "antd";
-import { useSearch } from "../hooks/useSearch";
 import { useMoralis } from "react-moralis"
 import { placeholderImage } from "../config/constants";
+import { useAlbumFromDatabase } from "../hooks/useAlbumFromDatabase";
 
 
 const { TabPane } = Tabs;
 
 const YourMusic = () => {
-    const { searchForAlbums, library, addressArray, setLibrary } = useSearch();
-    const { Moralis, chainId, user, isAuthenticated, account, isInitialized } = useMoralis()
-
+    const { isAuthenticated, account, isInitialized } = useMoralis()
+    const {fetchYourAlbums} = useAlbumFromDatabase()
+    const [library, setLibrary] = useState([]);
+    
 
     useEffect(() => {
-        if (isInitialized && isAuthenticated && account && addressArray) {
-            setLibrary(undefined);
-            searchForAlbums(account);
+        if (isInitialized && isAuthenticated && account) {
+            fetchYourAlbums(account).then((albums) => {
+            setLibrary(albums);
+            });
         }
-    }, [isInitialized, isAuthenticated, account, addressArray]);
+    }, [isInitialized, isAuthenticated, account]);
 
     return (
         <>

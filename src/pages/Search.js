@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Search.css";
 import { Tabs, Input } from "antd";
-import { useSearch } from "../hooks/useSearch";
+import {useSearchFromDatabase} from "../hooks/useSearchFromDatabase"
 
 
 const { TabPane } = Tabs;
 
 const Search = () => {
     const { Search } = Input;
-    const { searchForAlbums, library } = useSearch();
     const [searchInput, setSearchInput] = useState()
-
+    const searchSongs = useSearchFromDatabase(searchInput)
 
     return (
         <>
@@ -21,11 +20,12 @@ const Search = () => {
                     <h1 className="featuredTitle">
                         <Search style={{ width: "1000px" }} placeholder="Song Name, Album Name, Genre, Artist, Symbol, Year, Song Duration, Publisher Address..." enterButton="Search" size="large"
                             onChange={event => setSearchInput(event.target.value)}
-                            onSearch={() => searchForAlbums(searchInput)} />
+                            onSearch={() => {}} 
+                            />
                     </h1>
-                    {library && library.length != 0 ?
+                    {searchSongs && searchSongs.length != 0 ?
                         <div className="albums">
-                            {library.map((e) => (
+                            {searchSongs.map((e) => (
                                 <Link to="/album" state={e} className="albumSelection">
                                     <img
                                         src={e.image}
