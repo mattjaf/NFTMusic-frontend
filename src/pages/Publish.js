@@ -131,7 +131,8 @@ const Publish = () => {
                 symbol: symbol,
                 artist: artist,
                 year: year,
-                publisher: account
+                publisher: account,
+                chainId: chainId
             };
             const resultNft = await saveFile(
                 "metadata.json",
