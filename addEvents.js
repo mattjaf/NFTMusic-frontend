@@ -2,7 +2,7 @@ const Moralis = require("moralis/node")
 require("dotenv").config()
 let chainId = process.env.chainId || 31337
 let moralisChainId = chainId == "31337" ? "1337" : chainId
-const contractAddress = "0x2A6484d5a1D4CeE6237Fb6Fd36df9CA5C68Af680"
+const contractAddress = "0x05550d2A0096cC764A7Ccc81d88b80eaAeBb1B74"
 
 const serverUrl = process.env.REACT_APP_SERVER_URL
 const appId = process.env.REACT_APP_ID
@@ -13,11 +13,11 @@ async function main() {
     await Moralis.start({ serverUrl, appId, masterKey })
     console.log(`Working with contract address ${contractAddress}`)
 
-    let PublishedAblumOptions = {
+    let PublishedAlbumOptions = {
         // Moralis understands a local chain is 1337
         chainId: moralisChainId,
         sync_historical: true,
-        topic: "PublishedAblum(address,uint256,string[],string,string,string)",
+        topic: "PublishedAlbum(address,uint256,string[],string,string,string)",
         address: contractAddress,
         abi: {
             "anonymous": false,
@@ -41,9 +41,9 @@ async function main() {
                     "type": "string[]"
                 },
                 {
-                    "indexed": true,
+                    "indexed": false,
                     "internalType": "string",
-                    "name": "name",
+                    "name": "albumName",
                     "type": "string"
                 },
                 {
@@ -59,10 +59,10 @@ async function main() {
                     "type": "string"
                 }
             ],
-            "name": "PublishedAblum",
+            "name": "PublishedAlbum",
             "type": "event"
         },
-        tableName: "PublishedAblum",
+        tableName: "PublishedAlbum",
     }
 
     let BurnAlbumOptions = {
@@ -126,7 +126,7 @@ async function main() {
     }
 
 
-    const PublishedAblumResponse = await Moralis.Cloud.run("watchContractEvent", PublishedAblumOptions, {
+    const PublishedAlbumResponse = await Moralis.Cloud.run("watchContractEvent", PublishedAlbumOptions, {
         useMasterKey: true,
     })
     const BurnAlbumResponse = await Moralis.Cloud.run("watchContractEvent", BurnAlbumOptions, {
@@ -135,7 +135,7 @@ async function main() {
     const BurnSongResponse = await Moralis.Cloud.run("watchContractEvent", BurnSongOptions, {
         useMasterKey: true,
     })
-    if (PublishedAblumResponse.success && BurnAlbumResponse.success && BurnSongResponse.success) {
+    if (PublishedAlbumResponse.success && BurnAlbumResponse.success && BurnSongResponse.success) {
         console.log(`Success! Database Updated with watching events on chainId ${chainId}`)
     } else {
         console.log("Something went wrong...")
