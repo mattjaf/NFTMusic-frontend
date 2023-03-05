@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+//SPDX-License-Identifier: UNLICENSED
 
 pragma solidity ^0.8.7;
 
@@ -14,12 +14,12 @@ contract NFTMusicFactory is Ownable {
      * Could implement a Admin only modifier
      * Possibly launch a interface contract and make copies of different logic
      */
-
-    event PublishedAblum(
+    //spelled wrong*
+    event PublishedAlbum(
         address indexed contractAddress,
         uint256 indexed contractIndex,
         string[] songURIs, //is this a bit much?
-        string indexed name,
+        string albumName, //removed indexed
         string symbol,
         string albumCover //couldn't this be extracted from the first NFT's metadata
     );
@@ -143,6 +143,7 @@ contract NFTMusicFactory is Ownable {
         return address(NFTMusicSimpleArray[_index]);
     }
 
+    //fix camel case
     function allcontractAddresses() public view returns (address[] memory) {
         address[] memory result = new address[](totalSupply());
         for (uint256 i = 0; i < totalSupply(); i++) {
