@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useMoralis } from 'react-moralis';
+import console from "console-browserify";
 
 export const useSearchFromDatabase = (searchInput) => {
   const [songs, setSongs] = useState([]);
