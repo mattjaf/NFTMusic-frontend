@@ -48,11 +48,15 @@ const useAudio = (url, songIndex) => {
 
   useEffect(() => {
     if (isPlaying) {
-      audioRef.current.play();
+      if (audioRef.current.paused) {
+        audioRef.current.play().catch(error => console.log(error));
+      }
       startTimer();
     } else {
       clearInterval(intervalRef.current);
-      audioRef.current.pause();
+      if (!audioRef.current.paused) {
+        audioRef.current.pause();
+      }
     }
   }, [isPlaying]);
 
