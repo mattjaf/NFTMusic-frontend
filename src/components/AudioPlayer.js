@@ -4,8 +4,7 @@ import { useIPFS } from "../hooks/useIPFS";
 import "./AudioPlayer.css";
 import { SoundOutlined, StepBackwardOutlined, StepForwardOutlined, PlayCircleFilled, PauseCircleFilled } from "@ant-design/icons";
 
-
-const Player = ({ url, songIndex }) => { //added songIndex
+const Player = ({ url, songIndex }) => {
   const { resolveLink } = useIPFS();
   const [
     playing,
@@ -20,6 +19,7 @@ const Player = ({ url, songIndex }) => { //added songIndex
     trackIndex
   ] = useAudio(url, songIndex);
 
+  const track = url ? url[trackIndex] : null; // added check here
 
   const minSec = (secs) => {
     const minutes = Math.floor(secs / 60);
@@ -32,13 +32,15 @@ const Player = ({ url, songIndex }) => { //added songIndex
 
   return (
     <>
-      <div className="buttons" style={{ width: "300px", justifyContent: "start" }}>
-        <img className="cover" src={resolveLink((url[trackIndex].metadata).image)} alt="currentCover" />
-        <div>
-          <div className="songTitle">{(url[trackIndex].metadata).name}</div>
-          <div className="songAlbum">{url[trackIndex].name}</div>
+      {track && ( // modified this line to check for track
+        <div className="buttons" style={{ width: "300px", justifyContent: "start" }}>
+          <img className="cover" src={resolveLink(track.metadata.image)} alt="currentCover" />
+          <div>
+            <div className="songTitle">{track.metadata.name}</div>
+            <div className="songAlbum">{track.name}</div>
+          </div>
         </div>
-      </div>
+      )}
       <div>
         <div className="buttons">
           <StepBackwardOutlined className="forback" onClick={toPrevTrack} />
