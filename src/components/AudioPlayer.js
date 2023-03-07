@@ -19,7 +19,7 @@ const Player = ({ url, songIndex }) => {
     trackIndex
   ] = useAudio(url, songIndex);
 
-  const track = url ? url[trackIndex] : null; // added check here
+  const track = url?.[trackIndex]; // use optional chaining here
 
   const minSec = (secs) => {
     const minutes = Math.floor(secs / 60);
@@ -32,7 +32,7 @@ const Player = ({ url, songIndex }) => {
 
   return (
     <>
-      {track && ( // modified this line to check for track
+      {track && track.metadata && ( // use nullish coalescing here
         <div className="buttons" style={{ width: "300px", justifyContent: "start" }}>
           <img className="cover" src={resolveLink(track.metadata.image)} alt="currentCover" />
           <div>
@@ -56,7 +56,7 @@ const Player = ({ url, songIndex }) => {
             value={trackProgress}
             step={1}
             min={0}
-            max={duration ? duration : 0}
+            max={duration ?? 0} // use nullish coalescing here
             className="progress"
             tooltipVisible={false}
             onChange={(value) => onSearch(value)}
